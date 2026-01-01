@@ -42,7 +42,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
             else if (username.equalsIgnoreCase(manager)) {
-                Toast.makeText(this, "Manager Login", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, ManagerDashboardActivity.class);
+                startActivity(intent);
             }
             else {
                 Toast.makeText(this, "Invalid login", Toast.LENGTH_SHORT).show();
