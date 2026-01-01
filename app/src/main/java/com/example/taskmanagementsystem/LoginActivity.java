@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String[] employees = {
-            "Ali", "Aisyah", "Amin", "Siti",
-            "Farah", "Hakim", "Danial", "Nadia"
-    };
+    String[] employees = {"Azim","Ilham","Hanif","Syera","Farah","Hakim","Danial","Nadia"};
     String manager = "Manager";
 
     @Override
@@ -27,10 +24,11 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> {
             String username = etUsername.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
 
             boolean isEmployee = false;
             for (String emp : employees) {
-                if (emp.equalsIgnoreCase(username)) {
+                if (emp.equals(username) && password.equals(emp)) {
                     isEmployee = true;
                     break;
                 }
@@ -41,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("EMP_NAME", username);
                 startActivity(intent);
             }
-            else if (username.equalsIgnoreCase(manager)) {
+            else if (username.equals(manager) && password.equals(manager)) {
                 Intent intent = new Intent(LoginActivity.this, ManagerDashboardActivity.class);
                 startActivity(intent);
             }
