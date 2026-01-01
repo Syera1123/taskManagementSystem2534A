@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskManagementSystem">
         <activity
+            android:name=".ManageTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Task"
+            android:exported="false" />
+        <activity
             android:name=".ManagerDashboardActivity"
             android:exported="false" />
         <activity
@@ -25,9 +31,6 @@
             android:exported="false" />
         <activity
             android:name=".AddEditTaskActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ManageTaskActivity"
             android:exported="false" />
         <activity
             android:name=".adapter.ManagerTaskAdapter"
