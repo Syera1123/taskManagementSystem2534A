@@ -12,7 +12,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskManagementSystem">
         <activity
-            android:name=".MainActivity"
+            android:name=".EmployeeDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.EmployeeAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ViewEmployeeListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddEditTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManagerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".adapter.ManagerTaskAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".ChangeTaskStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewAssignedTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
