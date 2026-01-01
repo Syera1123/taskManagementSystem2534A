@@ -5,9 +5,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.taskmanagementsystem.adapter.TaskAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,8 @@ import java.util.List;
 public class ManageTaskActivity extends AppCompatActivity {
 
     private List<Task> allTasks;
+    private RecyclerView rvTasks;
+    private TaskAdapter adapter;
     private String[] employees = {"Azim","Ilham","Hanif","Syera","Farah","Hakim","Danial","Nadia"};
 
     @Override
@@ -22,33 +27,90 @@ public class ManageTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_task);
 
-        EditText etTaskTitle = findViewById(R.id.etTaskTitle);
-        Spinner spEmployee = findViewById(R.id.spEmployee);
-        Button btnAssign = findViewById(R.id.btnAssignTask);
-
-        // Dummy allTasks
         allTasks = new ArrayList<>();
 
-        // Spinner adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, employees);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spEmployee.setAdapter(adapter);
+        rvTasks = findViewById(R.id.rvTasks);
+        Button btnAssignTask = findViewById(R.id.btnAssignTask);
+        EditText etTaskTitle = findViewById(R.id.etTaskTitle);
+        Spinner spEmployee = findViewById(R.id.spEmployee);
 
-        btnAssign.setOnClickListener(v -> {
-            String taskTitle = etTaskTitle.getText().toString().trim();
-            String assignedEmp = spEmployee.getSelectedItem().toString();
+        ArrayAdapter<String> empAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, employees);
+        empAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spEmployee.setAdapter(empAdapter);
 
-            if(taskTitle.isEmpty()) {
-                Toast.makeText(this, "Enter task title", Toast.LENGTH_SHORT).show();
-                return;
+        adapter = new TaskAdapter(this, allTasks, new TaskAdapter.TaskActionListener() {
+            @Override
+            public void onEdit(int position) {
+                editTask(position);
             }
 
-            // Create new task (Pending status default)
-            Task task = new Task(taskTitle, "2026-01-01", "Pending", assignedEmp);
-            allTasks.add(task);
-
-            Toast.makeText(this, "Task assigned to " + assignedEmp, Toast.LENGTH_SHORT).show();
-            etTaskTitle.setText("");
+            @Override
+            public void onDelete(int position) {
+                allTasks.remove(position);
+                adapter.notifyDataSetChanged();
+            }
         });
+
+        rvTasks.setLayoutManager(new LinearLayoutManager(this));
+        rvTasks.setAdapter(adapter);
+
+        btnAssignTask.setOnClickListener(v -> {
+            String title = etTaskTitle.getText().toString().trim();
+            String assigned = spEmployee.getSelectedItem().toString();
+            if (!title.isEmpty()) {
+                allTasks.add(new Task(title, "2026-01-01", "Pending", assigned));
+                adapter.notifyDataSetChanged();
+                etTaskTitle.setText(""); // clear input
+            }
+        });
+    }
+
+    private void editTask(int position) {
+        Task task = allTasks.get(position);
+
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle("Edit Task");
+
+        EditText etTitle = new EditText(this);
+        etTitle.setText(task.getTitle());
+
+        Spinner spEmployee = new Spinner(this);
+        ArrayAdapter<String> empAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, employees);
+        empAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spEmployee.setAdapter(empAdapter);
+
+        // set spinner to current employee
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i].equals(task.getAssignedTo())) {
+                spEmployee.setSelection(i);
+                break;
+            }
+        }
+
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        layout.setPadding(50, 40, 50, 10);
+
+        android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        etTitle.setLayoutParams(params);
+        spEmployee.setLayoutParams(params);
+
+        layout.addView(etTitle);
+        layout.addView(spEmployee);
+        builder.setView(layout);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            task.setTitle(etTitle.getText().toString().trim());
+            task.setAssignedTo(spEmployee.getSelectedItem().toString());
+            adapter.notifyDataSetChanged();
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 }

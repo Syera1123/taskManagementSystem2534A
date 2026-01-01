@@ -17,5 +17,9 @@ public class Task {
     public String getDueDate() { return dueDate; }
     public String getStatus() { return status; }
     public String getAssignedTo() { return assignedTo; }
+
+    public void setTitle(String title) { this.title = title; }
+    public void setDueDate(String dueDate) { this.dueDate = dueDate; }
     public void setStatus(String status) { this.status = status; }
+    public void setAssignedTo(String assignedTo) { this.assignedTo = assignedTo; }
 }
