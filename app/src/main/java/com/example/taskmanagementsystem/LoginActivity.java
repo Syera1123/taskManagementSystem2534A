@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    String[] employees = {"Azim","Ilham","Hanif","Syera","Wann","Hakim","Danial","Nadia"};
+    String[] employees = {"Azim","Ilham","Hanif","Syera","Farah","Hakim","Danial","Nadia"};
     String manager = "Manager";
 
     @Override
