@@ -50,7 +50,7 @@ public class ManageTaskActivity extends AppCompatActivity {
 
             @Override
             public void onDelete(int position) {
-// --- ADDED: ALERT DIALOG FOR DELETE CONFIRMATION ---
+                // alert dialoog success delete with logo
                 new AlertDialog.Builder(ManageTaskActivity.this)
                         .setTitle("Confirm Deletion")
                         .setMessage("Are you sure you want to delete this task?")
@@ -79,7 +79,7 @@ public class ManageTaskActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 etTaskTitle.setText(""); // clear input
 
-                // --- ADDED: SNACKBAR WITH UNDO FEATURE ---
+                //snackbar success add task/ cannot be empty task title
                 Snackbar snackbar = Snackbar.make(v, "Task assigned to " + assigned, Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", view -> {
                     allTasks.remove(newTask);
