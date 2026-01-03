@@ -1,14 +1,17 @@
 package com.example.taskmanagementsystem;
 
+import com.google.android.material.snackbar.Snackbar;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.graphics.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AlertDialog;
 
 import com.example.taskmanagementsystem.adapter.TaskAdapter;
 
@@ -47,8 +50,20 @@ public class ManageTaskActivity extends AppCompatActivity {
 
             @Override
             public void onDelete(int position) {
-                allTasks.remove(position);
-                adapter.notifyDataSetChanged();
+// --- ADDED: ALERT DIALOG FOR DELETE CONFIRMATION ---
+                new AlertDialog.Builder(ManageTaskActivity.this)
+                        .setTitle("Confirm Deletion")
+                        .setMessage("Are you sure you want to delete this task?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Delete", (dialog, which) -> {
+                            allTasks.remove(position);
+                            adapter.notifyDataSetChanged();
+
+                            // Inform user with a simple Snackbar
+                            Snackbar.make(rvTasks, "Task removed", Snackbar.LENGTH_SHORT).show();
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             }
         });
 
@@ -59,9 +74,22 @@ public class ManageTaskActivity extends AppCompatActivity {
             String title = etTaskTitle.getText().toString().trim();
             String assigned = spEmployee.getSelectedItem().toString();
             if (!title.isEmpty()) {
-                allTasks.add(new Task(title, "2026-01-01", "Pending", assigned));
+                Task newTask = new Task(title, "2026-01-04", "Pending", assigned);
+                allTasks.add(newTask);
                 adapter.notifyDataSetChanged();
                 etTaskTitle.setText(""); // clear input
+
+                // --- ADDED: SNACKBAR WITH UNDO FEATURE ---
+                Snackbar snackbar = Snackbar.make(v, "Task assigned to " + assigned, Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", view -> {
+                    allTasks.remove(newTask);
+                    adapter.notifyDataSetChanged();
+                });
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+
+            } else {
+                etTaskTitle.setError("Please enter a title");
             }
         });
     }
