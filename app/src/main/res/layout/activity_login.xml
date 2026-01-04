@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="#58B3C7">
+    android:background="@drawable/hotelbg">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
@@ -22,20 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="#80ADD8E6">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:background="#ADD8E6">
+            android:padding="16dp">
 
             <EditText
                 android:id="@+id/etUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username" />
+                android:hint="Username"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
 
             <EditText
                 android:id="@+id/etPassword"
@@ -43,7 +45,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"/>
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
@@ -51,7 +55,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Login"
                 android:backgroundTint="#4CAF50"
-                android:textColor="@android:color/white"/>/>
+                android:textColor="@android:color/white"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
