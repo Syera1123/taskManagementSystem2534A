@@ -29,6 +29,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"/>
 
+
+    <TextView
+        android:id="@+id/createDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Create Date:" />
+
+    <TextView
+        android:id="@+id/finishDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Finish Date:" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
@@ -48,4 +63,5 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"/>
     </LinearLayout>
+
 </LinearLayout>

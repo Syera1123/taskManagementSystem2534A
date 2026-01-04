@@ -42,9 +42,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
+
+        // Setting the text for each view
         holder.tvTitle.setText(task.getTitle());
         holder.tvAssigned.setText("Assigned to: " + task.getAssignedTo());
         holder.tvStatus.setText("Status: " + task.getStatus());
+
+        // date
+        holder.tvCreateDate.setText("Created: " + task.getCreateDate());
 
         holder.btnEdit.setOnClickListener(v -> listener.onEdit(position));
         holder.btnDelete.setOnClickListener(v -> listener.onDelete(position));
@@ -56,7 +61,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvAssigned, tvStatus;
+        TextView tvTitle, tvAssigned, tvStatus, tvCreateDate;
         Button btnEdit, btnDelete;
 
         public TaskViewHolder(@NonNull View itemView) {
@@ -64,6 +69,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             tvTitle = itemView.findViewById(R.id.tvTaskTitle);
             tvAssigned = itemView.findViewById(R.id.tvAssignedTo);
             tvStatus = itemView.findViewById(R.id.tvStatus);
+
+            tvCreateDate = itemView.findViewById(R.id.createDate);
+
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
