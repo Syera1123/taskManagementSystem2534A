@@ -1,81 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:orientation="vertical"
-
     android:padding="16dp"
-
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8F0FE">
 
-    android:layout_height="match_parent">
-
-
-
+    <!-- HEADER TITLE -->
     <TextView
-
+        android:id="@+id/tvPageTitle"
         android:text="Manager - Assign Tasks"
-
-        android:textSize="20sp"
-
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"/>
 
-        android:layout_height="wrap_content"/>
-
-
-
+    <!-- TASK TITLE (pendek) -->
     <EditText
-
         android:id="@+id/etTaskTitle"
-
         android:hint="Task Title"
-
         android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@android:drawable/edit_text"
+        android:padding="12dp"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="sans-serif"/>
 
-        android:layout_height="wrap_content"
+    <!-- TASK DESCRIPTION (besar) -->
+    <EditText
+        android:id="@+id/etTaskDesc"
+        android:hint="Task Details"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@android:drawable/edit_text"
+    android:padding="12dp"
+    android:gravity="top"
+    android:layout_marginBottom="12dp"
+    android:fontFamily="sans-serif"/>
 
-        android:layout_marginTop="12dp"/>
-
-
-
+    <!-- EMPLOYEE SPINNER -->
     <Spinner
-
         android:id="@+id/spEmployee"
-
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"/>
 
-        android:layout_marginTop="12dp"/>
-
-
-
+    <!-- ADD TASK BUTTON -->
     <Button
-
         android:id="@+id/btnAssignTask"
-
         android:text="+ Add Task"
-
         android:layout_width="match_parent"
-
         android:layout_height="wrap_content"
+        android:backgroundTint="#16A34A"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:paddingVertical="12dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="6dp"
+        android:clipToOutline="true"/>
 
-        android:layout_marginTop="12dp"/>
-
-
-
+    <!-- TASK LIST -->
     <androidx.recyclerview.widget.RecyclerView
-
         android:id="@+id/rvTasks"
-
         android:layout_width="match_parent"
-
         android:layout_height="0dp"
-
         android:layout_weight="1"
-
-        android:layout_marginTop="16dp"/>
+        android:clipToPadding="false"
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

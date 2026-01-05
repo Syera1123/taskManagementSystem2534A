@@ -1,67 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="12dp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f0f0f0"
-    android:layout_marginBottom="8dp">
-
-    <TextView
-        android:id="@+id/tvTaskTitle"
-        android:text="Task Title"
-        android:textSize="18sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/tvAssignedTo"
-        android:text="Assigned to:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"/>
-
-    <TextView
-        android:id="@+id/tvStatus"
-        android:text="Status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"/>
-
-
-    <TextView
-        android:id="@+id/createDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Create Date:" />
-
-    <TextView
-        android:id="@+id/finishDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Finish Date:" />
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="6dp"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="#DFE9F6"> <!-- Soft Blue -->
 
-        <Button
-            android:id="@+id/btnEdit"
-            android:text="Edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:text="Delete"
-            android:layout_width="wrap_content"
+        <!-- TITLE -->
+        <TextView
+            android:id="@+id/tvTaskTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"/>
-    </LinearLayout>
+            android:text="Task Title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#0F172A"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginBottom="4dp" />
 
-</LinearLayout>
+        <!-- DESCRIPTION -->
+        <TextView
+            android:id="@+id/tvTaskDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Details Task"
+            android:textColor="#0F172A"
+            android:layout_marginBottom="4dp" />
+
+        <!-- ASSIGNED -->
+        <TextView
+            android:id="@+id/tvAssignedTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Assigned to:"
+            android:textColor="#0F172A"
+            android:layout_marginBottom="2dp" />
+
+        <!-- STATUS -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textStyle="bold"
+            android:textColor="#2563EB"
+            android:layout_marginBottom="4dp" />
+
+        <!-- DATES -->
+        <TextView
+            android:id="@+id/createDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Date:"
+            android:textColor="#0F172A"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:id="@+id/finishDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finish Date:"
+            android:textColor="#0F172A"
+            android:layout_marginBottom="8dp" />
+
+        <!-- BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="4dp">
+
+            <!-- EDIT BUTTON -->
+            <Button
+                android:id="@+id/btnEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Edit"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#2563EB"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingVertical="8dp"
+                android:elevation="4dp"
+                android:clipToOutline="true"
+                android:layout_marginEnd="6dp"
+                android:stateListAnimator="@null"
+                android:layout_marginTop="2dp"/>
+
+            <!-- DELETE BUTTON -->
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Delete"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#DC2626"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingVertical="8dp"
+                android:elevation="4dp"
+                android:clipToOutline="true"
+                android:layout_marginStart="6dp"
+                android:stateListAnimator="@null"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
