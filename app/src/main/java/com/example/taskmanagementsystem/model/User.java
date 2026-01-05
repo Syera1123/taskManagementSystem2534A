@@ -1,6 +1,7 @@
 package com.example.taskmanagementsystem.model;
 
 public class User {
+
     // represent a record in users tables
     private int id;
     private String email;
@@ -83,4 +84,6 @@ public class User {
     public void setSecret(String secret) {
         this.secret = secret;
     }
+
+
 }

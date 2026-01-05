@@ -3,7 +3,7 @@ package com.example.taskmanagementsystem.model;
 public class FailLogin {
     // fail login
     private String status;
-    private Error error;
+    private com.example.taskmanagementsystem.model.Error error;
 
     public String getStatus() {
         return status;
@@ -13,11 +13,15 @@ public class FailLogin {
         this.status = status;
     }
 
-    public Error getError() {
+    public com.example.taskmanagementsystem.model.Error getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(com.example.taskmanagementsystem.model.Error error) {
         this.error = error;
     }
+
 }
+
+
+

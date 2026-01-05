@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.taskmanagementsystem.sharedpref.SharedPrefManager;
+
 public class ManagerDashboardActivity extends AppCompatActivity {
 
     @Override
@@ -22,7 +24,22 @@ public class ManagerDashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(ManagerDashboardActivity.this, ManageTaskActivity.class);
             startActivity(intent);
         });
-        btnViewEmployees.setOnClickListener(v -> Toast.makeText(this, "View Employees clicked", Toast.LENGTH_SHORT).show());
-        btnLogout.setOnClickListener(v -> finish());
+
+        btnViewEmployees.setOnClickListener(v ->
+                Toast.makeText(this, "View Employees clicked", Toast.LENGTH_SHORT).show()
+        );
+
+        btnLogout.setOnClickListener(v -> logout());
+    }
+
+    private void logout() {
+        // Clear session
+        new SharedPrefManager(getApplicationContext()).logout();
+
+        // Redirect to LoginActivity & clear stack
+        Intent intent = new Intent(ManagerDashboardActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

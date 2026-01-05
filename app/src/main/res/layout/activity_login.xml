@@ -48,6 +48,12 @@
                 android:inputType="textPassword"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/black"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"

@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.taskmanagementsystem.sharedpref.SharedPrefManager;
+
 public class EmployeeDashboardActivity extends AppCompatActivity {
 
     @Override
@@ -22,11 +24,20 @@ public class EmployeeDashboardActivity extends AppCompatActivity {
         tvWelcome.setText("Welcome, " + empName);
 
         btnViewTasks.setOnClickListener(v -> {
-          //  Intent intent = new Intent(EmployeeDashboardActivity.this, ViewAssignedTaskActivity.class);
-         //  intent.putExtra("EMP_NAME", empName);
-          //  startActivity(intent);
+            // Intent ke ViewAssignedTaskActivity boleh ditambah di sini
         });
 
-        btnLogout.setOnClickListener(v -> finish());
+        btnLogout.setOnClickListener(v -> logout());
+    }
+
+    private void logout() {
+        // Clear session
+        new SharedPrefManager(getApplicationContext()).logout();
+
+        // Redirect ke LoginActivity & clear activity stack
+        Intent intent = new Intent(EmployeeDashboardActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

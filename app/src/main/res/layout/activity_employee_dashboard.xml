@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Welcome Text -->
         <TextView
             android:id="@+id/tvWelcome"
             android:layout_width="match_parent"
@@ -17,13 +19,30 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            android:padding="16dp" />
+            android:padding="8dp"/>
 
+        <!-- View Tasks Button -->
+        <Button
+            android:id="@+id/btnViewTasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View Tasks"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Example Task Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/taskCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:layout_marginTop="16dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
             app:cardUseCompatPadding="true">
@@ -34,6 +53,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <!-- Task Title -->
                 <TextView
                     android:id="@+id/taskTitle"
                     android:layout_width="match_parent"
@@ -41,14 +61,15 @@
                     android:text="Task Title"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
+                <!-- Task Details (Due date + Status) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="16dp"
@@ -57,10 +78,10 @@
 
                     <TextView
                         android:id="@+id/taskDueDate"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
+                        android:layout_marginStart="4dp"
                         android:text="Finish by 31 December 2024"
                         android:textColor="#666666"
                         android:textSize="12sp" />
@@ -76,13 +97,5 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/btnUpdateStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update Selected Tasks"
-            android:layout_margin="16dp"/>
-
     </LinearLayout>
-
-</FrameLayout>
+</ScrollView>
