@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#1D4ED8"/> <!-- Biru gelap bila tekan -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid android:color="#3B82F6"/> <!-- Biru ceria default -->
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+</selector>

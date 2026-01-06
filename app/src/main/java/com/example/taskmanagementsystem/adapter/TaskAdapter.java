@@ -22,9 +22,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onDelete(int position);
     }
 
-    private Context context;
-    private List<Task> taskList;
-    private TaskActionListener listener;
+    private final Context context;
+    private final List<Task> taskList;
+    private final TaskActionListener listener;
 
     public TaskAdapter(Context context, List<Task> taskList, TaskActionListener listener) {
         this.context = context;
@@ -35,24 +35,36 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @NonNull
     @Override
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_task_manager, parent, false);
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.item_task_manager, parent, false);
         return new TaskViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+
         Task task = taskList.get(position);
 
-        // Setting the text for each view
         holder.tvTitle.setText(task.getTitle());
+        holder.tvDescription.setText("Details: " + task.getDescription());
         holder.tvAssigned.setText("Assigned to: " + task.getAssignedTo());
         holder.tvStatus.setText("Status: " + task.getStatus());
-
-        // date
         holder.tvCreateDate.setText("Created: " + task.getCreateDate());
 
-        holder.btnEdit.setOnClickListener(v -> listener.onEdit(position));
-        holder.btnDelete.setOnClickListener(v -> listener.onDelete(position));
+        // ✅ GUNA getAdapterPosition (lebih selamat)
+        holder.btnEdit.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                listener.onEdit(pos);
+            }
+        });
+
+        holder.btnDelete.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                listener.onDelete(pos);
+            }
+        });
     }
 
     @Override
@@ -61,15 +73,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvAssigned, tvStatus, tvCreateDate;
+
+        TextView tvTitle, tvDescription, tvAssigned, tvStatus, tvCreateDate;
         Button btnEdit, btnDelete;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
+
             tvTitle = itemView.findViewById(R.id.tvTaskTitle);
+            tvDescription = itemView.findViewById(R.id.tvTaskDesc);
             tvAssigned = itemView.findViewById(R.id.tvAssignedTo);
             tvStatus = itemView.findViewById(R.id.tvStatus);
-
             tvCreateDate = itemView.findViewById(R.id.createDate);
 
             btnEdit = itemView.findViewById(R.id.btnEdit);
