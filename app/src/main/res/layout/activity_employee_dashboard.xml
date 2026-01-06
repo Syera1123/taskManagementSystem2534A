@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Welcome Text -->
         <TextView
             android:id="@+id/tvWelcome"
             android:layout_width="match_parent"
@@ -21,23 +20,7 @@
             android:textColor="@android:color/black"
             android:padding="8dp"/>
 
-        <!-- View Tasks Button -->
-        <Button
-            android:id="@+id/btnViewTasks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View Tasks"
-            android:layout_marginTop="8dp"/>
 
-        <!-- Logout Button -->
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:layout_marginTop="8dp"/>
-
-        <!-- Example Task Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/taskCard"
             android:layout_width="match_parent"
@@ -53,7 +36,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Task Title -->
                 <TextView
                     android:id="@+id/taskTitle"
                     android:layout_width="match_parent"
@@ -63,7 +45,6 @@
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
-                <!-- Task Details (Due date + Status) -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,6 +77,12 @@
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Status"
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 </ScrollView>
