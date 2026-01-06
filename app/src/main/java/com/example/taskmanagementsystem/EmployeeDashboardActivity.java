@@ -17,15 +17,10 @@ public class EmployeeDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_employee_dashboard);
 
         TextView tvWelcome = findViewById(R.id.tvWelcome);
-        //Button btnViewTasks = findViewById(R.id.btnViewTasks);
         Button btnLogout = findViewById(R.id.btnLogout);
 
         String empName = getIntent().getStringExtra("EMP_NAME");
         tvWelcome.setText("Welcome, " + empName);
-
-        //btnViewTasks.setOnClickListener(v -> {
-            // Intent ke ViewAssignedTaskActivity boleh ditambah di sini
-        //});
 
         btnLogout.setOnClickListener(v -> logout());
     }
