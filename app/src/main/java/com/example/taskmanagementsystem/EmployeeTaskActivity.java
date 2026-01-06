@@ -30,7 +30,7 @@ import retrofit2.Response;
 public class EmployeeTaskActivity extends AppCompatActivity {
 
     private TaskService taskService;
-    private RecyclerView rvBookList;
+    private RecyclerView rvTaskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         });
 
         // get reference to the RecyclerView bookList
-        rvBookList = findViewById(R.id.rvTaskList);
+        rvTaskList = findViewById(R.id.rvTaskList);
 
         // get user info from SharedPreferences to get token value
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
@@ -69,15 +69,15 @@ public class EmployeeTaskActivity extends AppCompatActivity {
                     ListAdapter adapter = new ListAdapter(getApplicationContext(), books);
 
                     // set adapter to the RecyclerView
-                    rvBookList.setAdapter(adapter);
+                    rvTaskList.setAdapter(adapter);
 
                     // set layout to recycler view
-                    rvBookList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    rvTaskList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
                     // add separator between item in the list
-                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvBookList.getContext(),
+                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTaskList.getContext(),
                             DividerItemDecoration.VERTICAL);
-                    rvBookList.addItemDecoration(dividerItemDecoration);
+                    rvTaskList.addItemDecoration(dividerItemDecoration);
                 }
                 else if (response.code() == 401) {
                     // invalid token, ask user to relogin
