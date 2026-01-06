@@ -5,6 +5,7 @@ public class TaskList {
     private String title;
     private String description;
     private String created_task_by;
+    private String assigned_to;
     private String status;
     private String create_date;
     private String finish_date;
@@ -13,11 +14,12 @@ public class TaskList {
 
     }
 
-    public TaskList(int id, String title, String description, String created_task_by, String status, String create_date, String finish_date){
+    public TaskList(int id, String title, String description, String created_task_by, String assigned_to, String status, String create_date, String finish_date){
         this.id = id;
         this.title = title;
         this.description = description;
         this.created_task_by = created_task_by;
+        this.assigned_to = assigned_to;
         this.status = status;
         this.create_date = create_date;
         this.finish_date = finish_date;
@@ -55,6 +57,14 @@ public class TaskList {
         this.created_task_by = created_task_by;
     }
 
+    public String getAssigned_to() {
+        return assigned_to;
+    }
+
+    public void setAssigned_to(String assigned_to) {
+        this.assigned_to = assigned_to;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -78,6 +88,7 @@ public class TaskList {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", created_task_by='" + created_task_by + '\'' +
+                ", assigned_to='" + assigned_to + '\'' +
                 ", status='" + status + '\'' +
                 ", create_date='" + create_date + '\'' +
                 ", finish_date='" + finish_date + '\'' +

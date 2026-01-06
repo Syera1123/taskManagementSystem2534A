@@ -23,7 +23,7 @@
             android:name=".ManagerDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".EmployeeDashboardActivity"
+            android:name=".EmployeeTaskActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

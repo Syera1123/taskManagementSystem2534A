@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                     if ("manager".equalsIgnoreCase(user.getRole())) {
                         startActivity(new Intent(LoginActivity.this, ManagerDashboardActivity.class));
                     } else {
-                        startActivity(new Intent(LoginActivity.this, EmployeeDashboardActivity.class)
+                        startActivity(new Intent(LoginActivity.this, EmployeeTaskActivity.class)
                                 .putExtra("EMP_NAME", user.getUsername()));
                     }
                     finish();
