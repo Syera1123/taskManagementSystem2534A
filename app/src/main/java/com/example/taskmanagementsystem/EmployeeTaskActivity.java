@@ -70,11 +70,30 @@ public class EmployeeTaskActivity extends AppCompatActivity {
                 Log.d("MyApp:", "Response: " + response.raw().toString());
 
                 if (response.code() == 200) {
-                    // Get list of book object from response
+                    // Get list of ALL tasks from server
                     List<TaskList> tasks = response.body();
 
+                    // Create a new list to hold ONLY this user's tasks
+                    java.util.ArrayList<TaskList> myTasks = new java.util.ArrayList<>();
+
+                    // Get current user's name for comparison
+                    String currentUsername = user.getUsername();
+
+                    // For Loop to filter tasks
+                    if (tasks != null) {
+                        for (int i = 0; i < tasks.size(); i++) {
+                            TaskList task = tasks.get(i);
+
+                            // Check if task exists and matches the user
+                            if (task.getAssigned_to() != null &&
+                                    task.getAssigned_to().equalsIgnoreCase(currentUsername)) {
+                                myTasks.add(task);
+                            }
+                        }
+                    }
+
                     // initialize adapter
-                    adapter = new ListAdapter(getApplicationContext(), tasks);
+                    adapter = new ListAdapter(getApplicationContext(), myTasks);
 
                     // set adapter to the RecyclerView
                     rvTaskList.setAdapter(adapter);
