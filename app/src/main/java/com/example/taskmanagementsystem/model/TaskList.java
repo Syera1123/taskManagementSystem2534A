@@ -81,6 +81,15 @@ public class TaskList {
         this.create_date = create_date;
     }
 
+    public String getFinish_date() {
+        return finish_date;
+    }
+
+    public void setFinish_date(String finish_date) {
+        this.finish_date = finish_date;
+    }
+
+
     @Override
     public String toString() {
         return "TaskList{" +

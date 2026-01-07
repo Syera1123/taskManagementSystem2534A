@@ -18,7 +18,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     /**
      * Create ViewHolder class to bind list item view
      */
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         public TextView tvTitle;
         public TextView tvDescription;
 
@@ -26,6 +26,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvDescription = itemView.findViewById(R.id.tvDescription);
+
+            itemView.setOnLongClickListener(this); //register long click action listener
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            currentPos = getAdapterPosition();
+            return false;
         }
     } // close ViewHolder class
 
@@ -34,6 +42,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private List<TaskList> taskListData;   // list of book objects
     private Context mContext;       // activity context
+    private int currentPos;
 
     public ListAdapter(Context context, List<TaskList> listData) {
         taskListData = listData;
@@ -66,5 +75,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return taskListData.size();
+    }
+
+    /**
+     * return book object for currently selected book (index already set by long press in viewholder)
+     * @return
+     */
+    public TaskList getSelectedItem() {
+        // return the book record if the current selected position/index is valid
+        if(currentPos>=0 && taskListData !=null && currentPos<taskListData.size()) {
+            return taskListData.get(currentPos);
+        }
+        return null;
     }
 }

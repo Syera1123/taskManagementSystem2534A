@@ -3,6 +3,10 @@ package com.example.taskmanagementsystem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -31,6 +35,7 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
     private TaskService taskService;
     private RecyclerView rvTaskList;
+    private ListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,9 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
         // get reference to the RecyclerView bookList
         rvTaskList = findViewById(R.id.rvTaskList);
+
+        //register for context menu
+        registerForContextMenu(rvTaskList);
 
         // get user info from SharedPreferences to get token value
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
@@ -63,10 +71,10 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
                 if (response.code() == 200) {
                     // Get list of book object from response
-                    List<TaskList> books = response.body();
+                    List<TaskList> tasks = response.body();
 
                     // initialize adapter
-                    ListAdapter adapter = new ListAdapter(getApplicationContext(), books);
+                    adapter = new ListAdapter(getApplicationContext(), tasks);
 
                     // set adapter to the RecyclerView
                     rvTaskList.setAdapter(adapter);
@@ -112,6 +120,33 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.task_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        TaskList selectedTask = adapter.getSelectedItem();
+        Log.d("MyApp", "selected "+selectedTask.toString());    // debug purpose
+
+        if (item.getItemId() == R.id.menu_details) {    // user clicked details contextual menu
+            doViewDetails(selectedTask);
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void doViewDetails(TaskList selectedTask) {
+        Log.d("MyApp:", "viewing details: " + selectedTask.toString());
+        // forward user to BookDetailsActivity, passing the selected book id
+        Intent intent = new Intent(getApplicationContext(), TaskDetailsActivity.class);
+        intent.putExtra("task_id", selectedTask.getId());
+        startActivity(intent);
+    }
+
 }
 
 
