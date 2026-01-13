@@ -24,6 +24,7 @@ import com.example.taskmanagementsystem.model.User;
 import com.example.taskmanagementsystem.remote.ApiUtils;
 import com.example.taskmanagementsystem.remote.TaskService;
 import com.example.taskmanagementsystem.sharedpref.SharedPrefManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -50,6 +51,19 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
         // get reference to the RecyclerView bookList
         rvTaskList = findViewById(R.id.rvTaskList);
+
+        FloatingActionButton btnLogout = findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(v -> {
+
+            new androidx.appcompat.app.AlertDialog.Builder(EmployeeTaskActivity.this)
+                    .setTitle("Logout")
+                    .setMessage("Are you sure you want to log out?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        clearSessionAndRedirect();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        });
 
         //register for context menu
         registerForContextMenu(rvTaskList);
@@ -127,17 +141,17 @@ public class EmployeeTaskActivity extends AppCompatActivity {
     }
 
     public void clearSessionAndRedirect() {
-        // clear the shared preferences
+
+        Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         spm.logout();
 
-        // terminate this MainActivity
-        finish();
-
-        // forward to Login Page
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 
+        finish();
     }
 
     @Override
@@ -166,16 +180,5 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
