@@ -98,7 +98,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TaskList> call, Throwable t) {
-                Toast.makeText(null, "Error connecting", Toast.LENGTH_LONG).show();
+                Toast.makeText(TaskDetailsActivity.this, "Error connecting", Toast.LENGTH_LONG).show();
             }
         });
 
