@@ -52,18 +52,6 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         // get reference to the RecyclerView bookList
         rvTaskList = findViewById(R.id.rvTaskList);
 
-        FloatingActionButton btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-
-            new androidx.appcompat.app.AlertDialog.Builder(EmployeeTaskActivity.this)
-                    .setTitle("Logout")
-                    .setMessage("Are you sure you want to log out?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        clearSessionAndRedirect();
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
-        });
 
         //register for context menu
         registerForContextMenu(rvTaskList);
@@ -142,16 +130,15 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
     public void clearSessionAndRedirect() {
 
-        Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
-
+        // clear the shared preferences
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         spm.logout();
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-
+        // terminate this MainActivity
         finish();
+
+        // forward to Login Page
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -179,6 +166,5 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         intent.putExtra("task_id", selectedTask.getId());
         startActivity(intent);
     }
-
 
 }
