@@ -1,120 +1,112 @@
 package com.example.taskmanagementsystem;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.taskmanagementsystem.model.TaskList;
-import com.example.taskmanagementsystem.model.User;
 import com.example.taskmanagementsystem.remote.ApiUtils;
 import com.example.taskmanagementsystem.remote.TaskService;
 import com.example.taskmanagementsystem.sharedpref.SharedPrefManager;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TaskDetailsActivity extends AppCompatActivity {
-
     private TaskService taskService;
+    private int taskId;
+    private String token;
+    private Spinner spStatus;
+    private String[] statusOptions = {"Pending", "In Progress", "Completed"};
+    private String currentTitle, currentDesc, currentAssignedTo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task_details);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        // retrieve book details based on selected id
-
-        // get book id sent by BookListActivity, -1 if not found
-        Intent intent = getIntent();
-        int taskId = intent.getIntExtra("task_id", -1);
-
-        // get user info from SharedPreferences
-        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
-        User user = spm.getUser();
-        String token = user.getToken();
-
-        // get book service instance
+        taskId = getIntent().getIntExtra("task_id", -1);
+        token = new SharedPrefManager(this).getUser().getToken();
         taskService = ApiUtils.getTaskService();
 
-        // execute the API query. send the token and book id
-        taskService.getTask(token, taskId).enqueue(new Callback<TaskList>() {
+        spStatus = findViewById(R.id.spStatus);
+        Button btnUpdate = findViewById(R.id.btnUpdateStatus);
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statusOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spStatus.setAdapter(adapter);
+
+        loadTaskDetails();
+
+        btnUpdate.setOnClickListener(v -> {
+            String selectedStatus = spStatus.getSelectedItem().toString();
+            // Panggil fungsi update khusus status
+            updateStatusOnServer(selectedStatus);
+        });
+    }
+
+    private void loadTaskDetails() {
+        taskService.getTask(token, taskId).enqueue(new Callback<TaskList>() {
             @Override
             public void onResponse(Call<TaskList> call, Response<TaskList> response) {
-                // for debug purpose
-                Log.d("MyApp:", "Response: " + response.raw().toString());
-
-                if (response.code() == 200) {
-                    // server return success
-
-                    // get book object from response
+                if (response.isSuccessful() && response.body() != null) {
                     TaskList task = response.body();
 
-                    // get references to the view elements
-                    TextView tvTitle = findViewById(R.id.tvTitle);
-                    TextView tvDesc = findViewById(R.id.tvDescription);
-                    TextView tvCreatedBy = findViewById(R.id.tvCreatedBy);
-                    TextView tvAssignedTo = findViewById(R.id.tvAssignTo);
-                    TextView tvStatus = findViewById(R.id.tvStatus);
-                    TextView tvCreatedDate = findViewById(R.id.tvCreatedDate);
-                    TextView tvFinishedDate = findViewById(R.id.tvFinishedDate);
+                    // Simpan data asal untuk kegunaan update/delete nanti
+                    currentTitle = task.getTitle();
+                    currentDesc = task.getDescription();
+                    currentAssignedTo = task.getAssigned_to();
 
-                    // set values
-                    tvTitle.setText(task.getTitle());
-                    tvDesc.setText(task.getDescription());
-                    tvCreatedBy.setText(task.getCreated_task_by());
-                    tvAssignedTo.setText(task.getAssigned_to());
-                    tvStatus.setText(task.getStatus());
-                    tvCreatedDate.setText(task.getCreate_date());
-                    tvFinishedDate.setText(task.getFinish_date());
+                    ((TextView) findViewById(R.id.tvTitle)).setText(currentTitle);
+                    ((TextView) findViewById(R.id.tvDescription)).setText(currentDesc);
+                    ((TextView) findViewById(R.id.tvStatus)).setText("Current Status: " + task.getStatus());
 
+                    for (int i = 0; i < statusOptions.length; i++) {
+                        if (statusOptions[i].equalsIgnoreCase(task.getStatus())) {
+                            spStatus.setSelection(i);
+                        }
+                    }
                 }
-                else if (response.code() == 401) {
-                    // unauthorized error. invalid token, ask user to relogin
-                    Toast.makeText(getApplicationContext(), "Invalid session. Please login again", Toast.LENGTH_LONG).show();
-                    clearSessionAndRedirect();
-                }
-                else {
-                    // server return other error
-                    Toast.makeText(getApplicationContext(), "Error: " + response.message(), Toast.LENGTH_LONG).show();
-                    Log.e("MyApp: ", response.toString());
+            }
+            @Override
+            public void onFailure(Call<TaskList> call, Throwable t) {}
+        });
+    }
+
+    private void updateStatusOnServer(String status) {SharedPrefManager spm = new SharedPrefManager(this);
+        String currentUsername = spm.getUser().getUsername();
+
+        // Panggil API dengan 4 parameter (api-key, id, status, assigned_to)
+        taskService.updateTaskStatus(token, taskId, status, currentUsername).enqueue(new Callback<TaskList>() {
+            @Override
+            public void onResponse(Call<TaskList> call, Response<TaskList> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(TaskDetailsActivity.this, "Status Updated!", Toast.LENGTH_SHORT).show();
+                    finish(); // Tutup page balik ke list
+                } else {
+                    Toast.makeText(TaskDetailsActivity.this, "Update Failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<TaskList> call, Throwable t) {
-                Toast.makeText(null, "Error connecting", Toast.LENGTH_LONG).show();
+                Toast.makeText(TaskDetailsActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
-    public void clearSessionAndRedirect() {
-        // clear the shared preferences
-        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
-        spm.logout();
 
-        // terminate this activity
-        finish();
-
-        // forward to Login Page
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-
+    private void deleteOldTask(String token, int id) {
+        taskService.deleteTask(token, id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                // Rekod lama berjaya dipadam
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) { }
+        });
     }
 }

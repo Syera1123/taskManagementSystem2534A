@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,19 +6,12 @@
     android:id="@+id/main"
     tools:context=".EmployeeTaskActivity">
 
-    <Button
-        android:id="@+id/btnUpdateAll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Update Status"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24dp" />
+    <!-- Butang bawah sudah dibuang -->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTaskList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btnUpdateAll"
         android:layout_marginBottom="12dp"/>
 
 </RelativeLayout>

@@ -1,91 +1,113 @@
 package com.example.taskmanagementsystem.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.taskmanagementsystem.R;
 import com.example.taskmanagementsystem.model.TaskList;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+    private List<TaskList> list;
+    private Context context;
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onUpdateStatus(TaskList task);
+    }
+
+    public ListAdapter(Context context, List<TaskList> list, OnItemClickListener listener) {
+        this.context = context;
+        this.list = list;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate the clean task item layout
+        View view = LayoutInflater.from(context).inflate(R.layout.task_list_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        TaskList task = list.get(position);
+
+        // 1. Set Title and Description
+        holder.tvTitle.setText(task.getTitle());
+        holder.tvDesc.setText(task.getDescription());
+
+        // 2. Set Assigned Info
+        holder.tvCreatedBy.setText(task.getCreated_task_by());
+
+        // 3. Set Status Badge and Color logic
+        String status = task.getStatus();
+        holder.tvStatus.setText(status.toUpperCase());
+
+        if (status.equalsIgnoreCase("Completed")) {
+            holder.tvStatus.setBackgroundColor(Color.parseColor("#22C55E")); // Green
+        } else if (status.equalsIgnoreCase("In Progress")) {
+            holder.tvStatus.setBackgroundColor(Color.parseColor("#EAB308")); // Yellow
+        } else {
+            holder.tvStatus.setBackgroundColor(Color.parseColor("#3B82F6")); // Blue (Pending)
+        }
+
+        // 4. Format Deadline (Day/Month/Year)
+        holder.tvFinishDate.setText(formatDate(task.getFinish_date()));
+
+        // 5. Update Status Button
+        holder.btnUpdateStatus.setOnClickListener(v -> listener.onUpdateStatus(task));
+    }
 
     /**
-     * Create ViewHolder class to bind list item view
+     * Helper function to convert DB date (yyyy-MM-dd) to UI date (dd/MM/yyyy)
      */
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        public TextView tvTitle;
-        public TextView tvDescription;
+    private String formatDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty() || dateStr.equalsIgnoreCase("null")) return "-";
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date date = inputFormat.parse(dateStr);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            try {
+                SimpleDateFormat inputFormatWithTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date date = inputFormatWithTime.parse(dateStr);
+                return outputFormat.format(date);
+            } catch (ParseException e2) {
+                return dateStr; // Return as-is if parsing fails
+            }
+        }
+    }
 
-        public ViewHolder(View itemView) {
+    @Override
+    public int getItemCount() { return list == null ? 0 : list.size(); }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvTitle, tvDesc, tvStatus, tvCreatedBy, tvFinishDate;
+        Button btnUpdateStatus;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvDescription = itemView.findViewById(R.id.tvDescription);
-
-            itemView.setOnLongClickListener(this); //register long click action listener
+            tvDesc = itemView.findViewById(R.id.tvDescription);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
+            tvCreatedBy = itemView.findViewById(R.id.tvCreatedBy);
+            tvFinishDate = itemView.findViewById(R.id.tvFinishDate);
+            btnUpdateStatus = itemView.findViewById(R.id.btnItemUpdate);
         }
-
-        @Override
-        public boolean onLongClick(View v) {
-            currentPos = getAdapterPosition();
-            return false;
-        }
-    } // close ViewHolder class
-
-    //////////////////////////////////////////////////////////////////////
-    // adapter class definitions
-
-    private List<TaskList> taskListData;   // list of book objects
-    private Context mContext;       // activity context
-    private int currentPos;
-
-    public ListAdapter(Context context, List<TaskList> listData) {
-        taskListData = listData;
-        mContext = context;
-    }
-
-    private Context getmContext() {
-        return mContext;
-    }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        // Inflate layout using the single item layout
-        View view = inflater.inflate(R.layout.task_list_item, parent, false);
-        // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        // bind data to the view holder instance
-        TaskList m = taskListData.get(position);
-        holder.tvTitle.setText(m.getTitle());
-        holder.tvDescription.setText(m.getDescription());
-    }
-
-    @Override
-    public int getItemCount() {
-        return taskListData.size();
-    }
-
-    /**
-     * return book object for currently selected book (index already set by long press in viewholder)
-     * @return
-     */
-    public TaskList getSelectedItem() {
-        // return the book record if the current selected position/index is valid
-        if(currentPos>=0 && taskListData !=null && currentPos<taskListData.size()) {
-            return taskListData.get(currentPos);
-        }
-        return null;
     }
 }

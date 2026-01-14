@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.taskmanagementsystem">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TaskManagementSystem">
-        <activity
-            android:name=".TaskDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ManageTaskActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Task"
-            android:exported="false" />
-        <activity
-            android:name=".ManagerDashboardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EmployeeTaskActivity"
-            android:exported="false" />
+
+        <!-- LOGIN PAGE -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <!-- MANAGER DASHBOARD -->
+        <activity android:name=".ManagerDashboardActivity" android:exported="false" />
+        <activity android:name=".ManageTaskActivity" android:exported="false" />
+        <activity android:name=".ReportActivity" android:exported="false" />
+        <activity android:name=".ViewEmployeesActivity" android:exported="false" />
+
+        <!-- STAFF / EMPLOYEE PAGES (ADD THESE TWO) -->
+        <activity
+            android:name=".EmployeeTaskActivity"
+            android:exported="false"
+            android:label="My Tasks" />
+
+        <activity
+            android:name=".TaskDetailsActivity"
+            android:exported="false"
+            android:label="Task Details" />
+
+    </application>
 </manifest>

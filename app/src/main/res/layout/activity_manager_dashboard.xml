@@ -53,6 +53,14 @@
                     android:layout_marginTop="16dp"/>
 
                 <Button
+                    android:id="@+id/btnReportTask"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Report Task"
+                    android:layout_marginTop="16dp"
+                    />
+
+                <Button
                     android:id="@+id/btnLogout"
                     android:text="Logout"
                     android:layout_width="match_parent"

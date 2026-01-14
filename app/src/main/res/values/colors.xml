@@ -2,4 +2,5 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="selected_green">#B4BEEB</color> <!-- Hijau cair yang lembut -->
 </resources>
