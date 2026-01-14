@@ -41,8 +41,6 @@ public class ReportActivity extends AppCompatActivity {
         // Initialize UI
         rvReport = findViewById(R.id.rvReport);
         progressBar = findViewById(R.id.progressBar);
-
-        // Initialize Dashboard Textviews
         tvTotalCount = findViewById(R.id.tvTotalCount);
         tvCompletedCount = findViewById(R.id.tvCompletedCount);
         tvInProgressCount = findViewById(R.id.tvInProgressCount);
@@ -50,7 +48,7 @@ public class ReportActivity extends AppCompatActivity {
 
         rvReport.setLayoutManager(new LinearLayoutManager(this));
 
-        // Get User Session
+        // Get User Session from SharedPrefManager
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         User user = spm.getUser();
         token = user.getToken();
@@ -79,7 +77,6 @@ public class ReportActivity extends AppCompatActivity {
                     taskList.clear();
                     taskList.addAll(response.body());
                     adapter.notifyDataSetChanged();
-
                     updateDashboardStats(taskList);
                 } else {
                     Toast.makeText(ReportActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
@@ -103,17 +100,12 @@ public class ReportActivity extends AppCompatActivity {
         for (TaskList task : tasks) {
             String status = task.getStatus();
             if (status != null) {
-                if (status.equalsIgnoreCase("Pending")) {
-                    pending++;
-                } else if (status.equalsIgnoreCase("In Progress")) {
-                    inProgress++;
-                } else if (status.equalsIgnoreCase("Completed")) {
-                    completed++;
-                }
+                if (status.equalsIgnoreCase("Pending")) pending++;
+                else if (status.equalsIgnoreCase("In Progress")) inProgress++;
+                else if (status.equalsIgnoreCase("Completed")) completed++;
             }
         }
 
-        // Set the counts to the TextViews
         tvTotalCount.setText(String.valueOf(total));
         tvCompletedCount.setText(String.valueOf(completed));
         tvInProgressCount.setText(String.valueOf(inProgress));
