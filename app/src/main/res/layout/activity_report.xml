@@ -33,7 +33,7 @@
         android:rowCount="2"
         android:alignmentMode="alignMargins">
 
-        <!-- Total Tasks Card -->
+        <!-- Total Tasks -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Completed Card -->
+        <!-- Completed (Green) -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- In Progress Card -->
+        <!-- In Progress (Yellow) -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Pending Card -->
+        <!-- Pending (Red) -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -175,6 +175,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvReport"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
