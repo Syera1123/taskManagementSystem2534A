@@ -1,6 +1,7 @@
 package com.example.taskmanagementsystem.adapter;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import java.util.Locale;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<TaskList> list;
     private OnTaskClickListener listener;
-    private boolean isReadOnly; // Tambah ini
+    private boolean isReadOnly;
 
     public interface OnTaskClickListener {
         void onEdit(TaskList task);
@@ -56,16 +57,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.tvAssigned.setText(task.getAssigned_to());
         holder.tvCreateDate.setText(formatDate(task.getCreate_date()));
 
-        // Status Styling
+        // --- STATUS STYLING (WARNA BADGE DINAMIK) ---
         String status = task.getStatus();
-        holder.tvStatus.setText(status);
+        holder.tvStatus.setText(status != null ? status.toUpperCase() : "PENDING");
+        holder.tvStatus.setTextColor(Color.WHITE); // Semua teks status jadi putih
+
         if (status != null) {
             if (status.equalsIgnoreCase("Completed")) {
-                holder.tvStatus.setTextColor(Color.parseColor("#166534"));
+                // WARNA HIJAU
+                holder.tvStatus.setBackgroundColor(Color.parseColor("#22C55E"));
             } else if (status.equalsIgnoreCase("In Progress")) {
-                holder.tvStatus.setTextColor(Color.parseColor("#854d0e"));
+                // WARNA KUNING
+                holder.tvStatus.setBackgroundColor(Color.parseColor("#EAB308"));
+            } else if (status.equalsIgnoreCase("Pending")) {
+                // WARNA MERAH
+                holder.tvStatus.setBackgroundColor(Color.parseColor("#EF4444"));
             } else {
-                holder.tvStatus.setTextColor(Color.parseColor("#1e40af"));
+                // WARNA DEFAULT BIRU
+                holder.tvStatus.setBackgroundColor(Color.parseColor("#3B82F6"));
             }
         }
 
@@ -78,7 +87,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.tvFinishDate.setTextColor(Color.parseColor("#1E293B"));
         }
 
-        // --- LOGIK READ ONLY ---
+        // --- LOGIK READ ONLY (Untuk ReportActivity) ---
         if (isReadOnly) {
             holder.btnEdit.setVisibility(View.GONE);
             holder.btnDelete.setVisibility(View.GONE);
@@ -115,7 +124,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvDesc = itemView.findViewById(R.id.tvTaskDesc);
             tvAssigned = itemView.findViewById(R.id.tvAssignedTo);
             tvStatus = itemView.findViewById(R.id.tvStatus);
-            tvCreateDate = itemView.findViewById(R.id.createDate);
+            tvCreateDate = itemView.findViewById(R.id.createDate); // Pastikan ID ini ada di XML
             tvCreatedBy = itemView.findViewById(R.id.tvCreatedBy);
             tvFinishDate = itemView.findViewById(R.id.finishDate);
             btnEdit = itemView.findViewById(R.id.btnEdit);
