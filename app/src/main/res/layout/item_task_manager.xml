@@ -37,14 +37,16 @@
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="sans-serif-medium"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="Pending"
                 android:textColor="#FFFFFF"
-                android:background="#3B82F6" />
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:background="@drawable/status_rounded_bg" />
         </RelativeLayout>
 
         <!-- DESCRIPTION -->

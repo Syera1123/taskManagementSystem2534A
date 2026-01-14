@@ -48,37 +48,26 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        TaskList task = list.get(position);    holder.tvTitle.setText(task.getTitle());
+        TaskList task = list.get(position);
+
+        holder.tvTitle.setText(task.getTitle());
         holder.tvDesc.setText(task.getDescription());
         holder.tvCreatedBy.setText(task.getCreated_task_by());
         holder.tvAssigned.setText(task.getAssigned_to());
         holder.tvCreateDate.setText(formatDate(task.getCreate_date()));
 
-        // --- LOGIK WARNA STATUS BADGE (DIBETULKAN) ---
+        // Status Styling
         String status = task.getStatus();
-        holder.tvStatus.setText(status != null ? status.toUpperCase() : "PENDING");
-
+        holder.tvStatus.setText(status);
         if (status != null) {
             if (status.equalsIgnoreCase("Completed")) {
-                // WARNA HIJAU
-                holder.tvStatus.setBackgroundColor(Color.parseColor("#22C55E"));
-                holder.tvStatus.setTextColor(Color.WHITE);
+                holder.tvStatus.setTextColor(Color.parseColor("#166534"));
             } else if (status.equalsIgnoreCase("In Progress")) {
-                // WARNA KUNING
-                holder.tvStatus.setBackgroundColor(Color.parseColor("#EAB308"));
-                holder.tvStatus.setTextColor(Color.WHITE);
-            } else if (status.equalsIgnoreCase("Pending")) {
-                // WARNA MERAH
-                holder.tvStatus.setBackgroundColor(Color.parseColor("#EF4444"));
-                holder.tvStatus.setTextColor(Color.WHITE);
+                holder.tvStatus.setTextColor(Color.parseColor("#854d0e"));
             } else {
-                // WARNA DEFAULT (BIRU)
-                holder.tvStatus.setBackgroundColor(Color.parseColor("#3B82F6"));
-                holder.tvStatus.setTextColor(Color.WHITE);
+                holder.tvStatus.setTextColor(Color.parseColor("#1e40af"));
             }
         }
-
-
 
         // Deadline Styling
         if (task.getFinish_date() == null || task.getFinish_date().isEmpty() || task.getFinish_date().equalsIgnoreCase("null")) {
