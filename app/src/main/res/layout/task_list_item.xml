@@ -23,17 +23,6 @@
             android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@id/tvStatus"
-                android:fontFamily="sans-serif-black"
-                android:text="Task Title"
-                android:textColor="#1E293B"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,6 +35,19 @@
                 android:textColor="#FFFFFF"
                 android:textSize="11sp"
                 android:textAllCaps="true" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/tvStatus"
+                android:fontFamily="sans-serif-black"
+                android:text="Task Title"
+                android:textColor="#1E293B"
+                android:textSize="18sp" />
+
+
         </RelativeLayout>
 
         <!-- DESCRIPTION -->
