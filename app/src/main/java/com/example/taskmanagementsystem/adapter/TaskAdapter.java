@@ -19,15 +19,24 @@ import java.util.Locale;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<TaskList> list;
     private OnTaskClickListener listener;
+    private boolean isReadOnly; // Tambah ini
 
     public interface OnTaskClickListener {
         void onEdit(TaskList task);
         void onDelete(TaskList task);
     }
 
+    // Constructor asal (untuk kegunaan Manager/Admin biasa)
     public TaskAdapter(List<TaskList> list, OnTaskClickListener listener) {
         this.list = list;
         this.listener = listener;
+        this.isReadOnly = false;
+    }
+
+    // Constructor baru (untuk Report - Read Only)
+    public TaskAdapter(List<TaskList> list, boolean isReadOnly) {
+        this.list = list;
+        this.isReadOnly = isReadOnly;
     }
 
     @NonNull
@@ -45,11 +54,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.tvDesc.setText(task.getDescription());
         holder.tvCreatedBy.setText(task.getCreated_task_by());
         holder.tvAssigned.setText(task.getAssigned_to());
-
-        // Format Create Date (yyyy-mm-dd -> dd/mm/yyyy)
         holder.tvCreateDate.setText(formatDate(task.getCreate_date()));
 
-        // Format Status Badge & Color
+        // Status Styling
         String status = task.getStatus();
         holder.tvStatus.setText(status);
         if (status != null) {
@@ -62,7 +69,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             }
         }
 
-        // Logic for Finish Deadline & Date Formatting
+        // Deadline Styling
         if (task.getFinish_date() == null || task.getFinish_date().isEmpty() || task.getFinish_date().equalsIgnoreCase("null")) {
             holder.tvFinishDate.setText("Not set");
             holder.tvFinishDate.setTextColor(Color.parseColor("#DC2626"));
@@ -71,50 +78,32 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.tvFinishDate.setTextColor(Color.parseColor("#1E293B"));
         }
 
-        holder.btnEdit.setOnClickListener(v -> {
-            if (listener != null) listener.onEdit(task);
-        });
-
-        holder.btnDelete.setOnClickListener(v -> {
-            if (listener != null) listener.onDelete(task);
-        });
-    }
-
-    // Fungsi Helper untuk tukar format tarikh (DIBETULKAN)
-    private String formatDate(String dateStr) {
-        // Semakan: Menggunakan dateStr yang betul
-        if (dateStr == null || dateStr.isEmpty() || dateStr.equalsIgnoreCase("null")) return "-";
-
-        try {
-            // Format asal dari database
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            // Format baru: Hari/Bulan/Tahun
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-            Date date = inputFormat.parse(dateStr);
-            return outputFormat.format(date);
-        } catch (ParseException e) {
-            // Jika format asal ada jam (cth: 2024-01-14 10:00:00), cuba parse format ini
-            try {
-                SimpleDateFormat inputFormatWithTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-                Date date = inputFormatWithTime.parse(dateStr);
-                return outputFormat.format(date);
-            } catch (ParseException e2) {
-                return dateStr; // Jika gagal juga, pulangkan string asal (cth: dd/mm/yyyy sedia ada)
-            }
+        // --- LOGIK READ ONLY ---
+        if (isReadOnly) {
+            holder.btnEdit.setVisibility(View.GONE);
+            holder.btnDelete.setVisibility(View.GONE);
+        } else {
+            holder.btnEdit.setVisibility(View.VISIBLE);
+            holder.btnDelete.setVisibility(View.VISIBLE);
+            holder.btnEdit.setOnClickListener(v -> { if (listener != null) listener.onEdit(task); });
+            holder.btnDelete.setOnClickListener(v -> { if (listener != null) listener.onDelete(task); });
         }
     }
 
-    public void setList(List<TaskList> newList) {
-        this.list = newList;
-        notifyDataSetChanged();
+    private String formatDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty() || dateStr.equalsIgnoreCase("null")) return "-";
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Date date = inputFormat.parse(dateStr);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            return dateStr;
+        }
     }
 
     @Override
-    public int getItemCount() {
-        return list == null ? 0 : list.size();
-    }
+    public int getItemCount() { return list == null ? 0 : list.size(); }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDesc, tvAssigned, tvStatus, tvCreateDate, tvCreatedBy, tvFinishDate;
@@ -129,7 +118,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvCreateDate = itemView.findViewById(R.id.createDate);
             tvCreatedBy = itemView.findViewById(R.id.tvCreatedBy);
             tvFinishDate = itemView.findViewById(R.id.finishDate);
-
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
