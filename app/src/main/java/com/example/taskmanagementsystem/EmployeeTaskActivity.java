@@ -3,8 +3,7 @@ package com.example.taskmanagementsystem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
+import android.view.ContextMenu;import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -14,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +23,7 @@ import com.example.taskmanagementsystem.remote.ApiUtils;
 import com.example.taskmanagementsystem.remote.TaskService;
 import com.example.taskmanagementsystem.sharedpref.SharedPrefManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,110 +35,98 @@ public class EmployeeTaskActivity extends AppCompatActivity {
     private TaskService taskService;
     private RecyclerView rvTaskList;
     private ListAdapter adapter;
+    private String token;
+    private String currentUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_employee);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        // get reference to the RecyclerView bookList
+        // Apply Window Insets
+        View mainView = findViewById(R.id.main);
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
+
+        // Initialize RecyclerView
         rvTaskList = findViewById(R.id.rvTaskList);
+        rvTaskList.setLayoutManager(new LinearLayoutManager(this));
 
-        //register for context menu
-        registerForContextMenu(rvTaskList);
-
-        // get user info from SharedPreferences to get token value
+        // Get user session info
         SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
         User user = spm.getUser();
-        String token = user.getToken();
+        token = user.getToken();
+        currentUsername = user.getUsername();
 
-        // get book service instance
         taskService = ApiUtils.getTaskService();
 
-        // execute the call. send the user token when sending the query
+        // Initial task load
+        loadTasks();
+    }
+
+    /**
+     * Fetches tasks and filters them specifically for the logged-in staff member.
+     */
+    private void loadTasks() {
         taskService.getAllTask(token).enqueue(new Callback<List<TaskList>>() {
             @Override
             public void onResponse(Call<List<TaskList>> call, Response<List<TaskList>> response) {
-                // for debug purpose
-                Log.d("MyApp:", "Response: " + response.raw().toString());
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TaskList> allTasks = response.body();
+                    List<TaskList> myFilteredTasks = new ArrayList<>();
 
-                if (response.code() == 200) {
-                    // Get list of ALL tasks from server
-                    List<TaskList> tasks = response.body();
-
-                    // Create a new list to hold ONLY this user's tasks
-                    java.util.ArrayList<TaskList> myTasks = new java.util.ArrayList<>();
-
-                    // Get current user's name for comparison
-                    String currentUsername = user.getUsername();
-
-                    // For Loop to filter tasks
-                    if (tasks != null) {
-                        for (int i = 0; i < tasks.size(); i++) {
-                            TaskList task = tasks.get(i);
-
-                            // Check if task exists and matches the user
-                            if (task.getAssigned_to() != null &&
-                                    task.getAssigned_to().equalsIgnoreCase(currentUsername)) {
-                                myTasks.add(task);
-                            }
+                    // Logic: Filter tasks where assigned_to matches current logged-in staff
+                    for (TaskList task : allTasks) {
+                        if (task.getAssigned_to() != null &&
+                                task.getAssigned_to().equalsIgnoreCase(currentUsername)) {
+                            myFilteredTasks.add(task);
                         }
                     }
 
-                    // initialize adapter
-                    adapter = new ListAdapter(getApplicationContext(), myTasks);
+                    // FIX: Pass 3 arguments: Context, List, and Listener
+                    adapter = new ListAdapter(EmployeeTaskActivity.this, myFilteredTasks, task -> {
+                        // When "UPDATE STATUS" is clicked
+                        Intent intent = new Intent(EmployeeTaskActivity.this, TaskDetailsActivity.class);
+                        intent.putExtra("task_id", task.getId());
+                        startActivity(intent);
+                    });
 
-                    // set adapter to the RecyclerView
                     rvTaskList.setAdapter(adapter);
-
-                    // set layout to recycler view
-                    rvTaskList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-                    // add separator between item in the list
-                    DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTaskList.getContext(),
-                            DividerItemDecoration.VERTICAL);
-                    rvTaskList.addItemDecoration(dividerItemDecoration);
-                }
-                else if (response.code() == 401) {
-                    // invalid token, ask user to relogin
-                    Toast.makeText(getApplicationContext(), "Invalid session. Please login again", Toast.LENGTH_LONG).show();
+                } else if (response.code() == 401) {
+                    Toast.makeText(getApplicationContext(), "Session expired. Please login again", Toast.LENGTH_LONG).show();
                     clearSessionAndRedirect();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Error: " + response.message(), Toast.LENGTH_LONG).show();
-                    // server return other error
-                    Log.e("MyApp: ", response.toString());
                 }
             }
 
             @Override
             public void onFailure(Call<List<TaskList>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error connecting to the server", Toast.LENGTH_LONG).show();
-                Log.e("MyApp:", t.toString());
+                Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void clearSessionAndRedirect() {
-        // clear the shared preferences
-        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
-        spm.logout();
-
-        // terminate this MainActivity
-        finish();
-
-        // forward to Login Page
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh list to show updated statuses immediately
+        loadTasks();
     }
 
+    public void clearSessionAndRedirect() {
+        SharedPrefManager spm = new SharedPrefManager(getApplicationContext());
+        spm.logout();
+        finish();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    // Optional: Long-press context menu logic
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getMenuInflater();
@@ -148,34 +135,7 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        TaskList selectedTask = adapter.getSelectedItem();
-        Log.d("MyApp", "selected "+selectedTask.toString());    // debug purpose
-
-        if (item.getItemId() == R.id.menu_details) {    // user clicked details contextual menu
-            doViewDetails(selectedTask);
-        }
-
+        // Handle long-press menu actions if needed
         return super.onContextItemSelected(item);
     }
-
-    private void doViewDetails(TaskList selectedTask) {
-        Log.d("MyApp:", "viewing details: " + selectedTask.toString());
-        // forward user to BookDetailsActivity, passing the selected book id
-        Intent intent = new Intent(getApplicationContext(), TaskDetailsActivity.class);
-        intent.putExtra("task_id", selectedTask.getId());
-        startActivity(intent);
-    }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
