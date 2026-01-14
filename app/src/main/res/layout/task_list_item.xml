@@ -131,7 +131,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="UPDATE STATUS"
+            android:text="UPDATE PROGRESS"
             android:textColor="#0D47A1"
             card_view:strokeColor="#0D47A1"
             android:textSize="12sp"
