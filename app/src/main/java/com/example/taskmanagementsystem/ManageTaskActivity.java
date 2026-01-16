@@ -3,6 +3,7 @@ package com.example.taskmanagementsystem;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -141,20 +142,23 @@ public class ManageTaskActivity extends AppCompatActivity {
         EditText edtT = view.findViewById(R.id.editT);
         EditText edtD = view.findViewById(R.id.editD);
         EditText edtCBy = view.findViewById(R.id.editCreatedBy);
-        // NEW: Added a way to edit finish date in dialog
         EditText edtFDate = view.findViewById(R.id.editFinishDate);
         Spinner spE = view.findViewById(R.id.editSp);
         Button btnSave = view.findViewById(R.id.btnSaveEdit);
 
+        // 1. Populate form with existing task data
         edtT.setText(task.getTitle());
         edtD.setText(task.getDescription());
         edtCBy.setText(task.getCreated_task_by());
 
-        // If you don't have editFinishDate in dialog XML yet,
-        // it will use the current one from the database
         if(edtFDate != null) {
             edtFDate.setText(task.getFinish_date());
-            edtFDate.setOnClickListener(v -> showDatePicker(edtFDate));
+            edtFDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDatePicker(edtFDate);
+                }
+            });
         }
 
         ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, staffNames);
@@ -163,21 +167,102 @@ public class ManageTaskActivity extends AppCompatActivity {
 
         AlertDialog dialog = new AlertDialog.Builder(this).setView(view).create();
 
-        btnSave.setOnClickListener(v -> {
-            String updatedFDate = (edtFDate != null) ? edtFDate.getText().toString() : task.getFinish_date();
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 2. Get values from form
+                String title = edtT.getText().toString();
+                String description = edtD.getText().toString();
+                String createdBy = edtCBy.getText().toString();
+                String assignedTo = spE.getSelectedItem().toString();
+                String finishDate = "";
 
-            taskService.updateTask(token, task.getId(), edtT.getText().toString(), edtD.getText().toString(),
-                            spE.getSelectedItem().toString(), edtCBy.getText().toString(), updatedFDate)
-                    .enqueue(new Callback<TaskList>() {
-                        @Override
-                        public void onResponse(Call<TaskList> call, Response<TaskList> response) {
-                            Toast.makeText(ManageTaskActivity.this, "Updated!", Toast.LENGTH_SHORT).show();
+                if (edtFDate != null) {
+                    finishDate = edtFDate.getText().toString();
+                } else {
+                    finishDate = task.getFinish_date();
+                }
+
+                // 3. Log old task info (EXACTLY like lecturer's example)
+                Log.d("TaskUpdate", "Old Task info: " + task.toString());
+
+                // 4. Update the task object with new data (EXACTLY like lecturer's example)
+                task.setTitle(title);
+                task.setDescription(description);
+                task.setCreated_task_by(createdBy);
+                task.setAssigned_to(assignedTo);
+                task.setFinish_date(finishDate);
+                // Keep the existing status (since we're not changing it in this dialog)
+                // task.setStatus(task.getStatus());
+
+                // 5. Log new task info (EXACTLY like lecturer's example)
+                Log.d("TaskUpdate", "New Task info: " + task.toString());
+
+                // 6. Get user info from SharedPreferences (EXACTLY like lecturer's example)
+                SharedPrefManager spm = new SharedPrefManager(ManageTaskActivity.this);
+                String token = spm.getUser().getToken();
+
+                // 7. Send request to update the task record to the REST API
+                Call<TaskList> call = taskService.updateTask(
+                        token,
+                        task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getAssigned_to(),
+                        task.getCreated_task_by(),
+                        task.getFinish_date()
+                );
+
+                // 8. Execute (EXACTLY like lecturer's example)
+                call.enqueue(new Callback<TaskList>() {
+                    @Override
+                    public void onResponse(Call<TaskList> call, Response<TaskList> response) {
+                        // For debug purpose (EXACTLY like lecturer's example)
+                        Log.d("TaskUpdate", "Update Request Response: " + response.raw().toString());
+
+                        if (response.code() == 200 || response.code() == 201) {
+                            // Server return success code for update request
+
+                            // Get updated task object from response
+                            TaskList updatedTask = response.body();
+
+                            // Display message
+                            Toast.makeText(ManageTaskActivity.this,
+                                    "Task '" + updatedTask.getTitle() + "' updated successfully.",
+                                    Toast.LENGTH_SHORT).show();
+
                             dialog.dismiss();
                             loadAllTasks();
                         }
-                        @Override public void onFailure(Call<TaskList> call, Throwable t) {}
-                    });
+                        else if (response.code() == 401) {
+                            // Unauthorized error - invalid token, ask user to relogin
+                            Toast.makeText(ManageTaskActivity.this,
+                                    "Invalid session. Please login again",
+                                    Toast.LENGTH_LONG).show();
+                            // You might want to add clearSessionAndRedirect() here
+                        }
+                        else {
+                            // Server return other error
+                            Toast.makeText(ManageTaskActivity.this,
+                                    "Error: " + response.message(),
+                                    Toast.LENGTH_LONG).show();
+                            Log.e("TaskUpdate", response.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<TaskList> call, Throwable t) {
+                        Toast.makeText(ManageTaskActivity.this,
+                                "Error [" + t.getMessage() + "]",
+                                Toast.LENGTH_LONG).show();
+
+                        // For debug purpose
+                        Log.d("TaskUpdate", "Error: " + t.getMessage());
+                    }
+                });
+            }
         });
+
         dialog.show();
     }
 

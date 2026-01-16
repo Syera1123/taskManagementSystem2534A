@@ -30,8 +30,8 @@ public interface TaskService {
             @Field("finish_date") String finish_date // Add this 7th parameter
     );
 
-     @FormUrlEncoded
-    @POST("tasks/update/{id}")
+    @FormUrlEncoded
+    @POST("tasks/{id}")
     Call<TaskList> updateTask(
             @Header("api-key") String token,
             @Path("id") int id,
