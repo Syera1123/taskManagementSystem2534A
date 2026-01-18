@@ -85,7 +85,8 @@
                         android:layout_height="wrap_content"
                         android:text="Create Date:"
                         android:textSize="12sp"
-                        android:textColor="#64748B"/>
+                        android:textColor="#64748B"
+                        android:textStyle="bold"/>
                     <EditText
                         android:id="@+id/etCreateDate"
                         android:layout_width="match_parent"
@@ -110,7 +111,9 @@
                         android:layout_height="wrap_content"
                         android:text="Finish Deadline:"
                         android:textSize="12sp"
-                        android:textColor="#64748B"/>
+                        android:textColor="#64748B"
+                        android:textStyle="bold"/>
+
                     <EditText
                         android:id="@+id/etFinishDate"
                         android:layout_width="match_parent"
@@ -163,7 +166,7 @@
                 android:text="+ Add Task"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/holo_green_dark"
+                android:backgroundTint="#AAE67C"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:paddingVertical="12dp"
