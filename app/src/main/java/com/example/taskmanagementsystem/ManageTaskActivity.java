@@ -101,7 +101,7 @@ public class ManageTaskActivity extends AppCompatActivity {
 
         String assignedTo = spEmployee.getSelectedItem().toString();
 
-        // Adding task with finishDate
+        //task with finishDate
         taskService.addTask(token, title, desc, assignedTo, createdBy, "Pending", finishDate)
                 .enqueue(new Callback<TaskList>() {
                     @Override
@@ -183,26 +183,24 @@ public class ManageTaskActivity extends AppCompatActivity {
                     finishDate = task.getFinish_date();
                 }
 
-                // 3. Log old task info (EXACTLY like lecturer's example)
+                //3. Log old task info
                 Log.d("TaskUpdate", "Old Task info: " + task.toString());
 
-                // 4. Update the task object with new data (EXACTLY like lecturer's example)
+                //4.Update the task object with new data
                 task.setTitle(title);
                 task.setDescription(description);
                 task.setCreated_task_by(createdBy);
                 task.setAssigned_to(assignedTo);
                 task.setFinish_date(finishDate);
-                // Keep the existing status (since we're not changing it in this dialog)
-                // task.setStatus(task.getStatus());
 
-                // 5. Log new task info (EXACTLY like lecturer's example)
+                //5. Log new task info
                 Log.d("TaskUpdate", "New Task info: " + task.toString());
 
-                // 6. Get user info from SharedPreferences (EXACTLY like lecturer's example)
+                //6. Get user info from SharedPreferences
                 SharedPrefManager spm = new SharedPrefManager(ManageTaskActivity.this);
                 String token = spm.getUser().getToken();
 
-                // 7. Send request to update the task record to the REST API
+                //7. Send request to update the task record to the REST API
                 Call<TaskList> call = taskService.updateTask(
                         token,
                         task.getId(),
@@ -213,20 +211,20 @@ public class ManageTaskActivity extends AppCompatActivity {
                         task.getFinish_date()
                 );
 
-                // 8. Execute (EXACTLY like lecturer's example)
+                //8. Execute
                 call.enqueue(new Callback<TaskList>() {
                     @Override
                     public void onResponse(Call<TaskList> call, Response<TaskList> response) {
-                        // For debug purpose (EXACTLY like lecturer's example)
+                        //For debug purpose
                         Log.d("TaskUpdate", "Update Request Response: " + response.raw().toString());
 
                         if (response.code() == 200 || response.code() == 201) {
-                            // Server return success code for update request
+                            //Server return success code for update request
 
                             // Get updated task object from response
                             TaskList updatedTask = response.body();
 
-                            // Display message
+                            //Display message
                             Toast.makeText(ManageTaskActivity.this,
                                     "Task '" + updatedTask.getTitle() + "' updated successfully.",
                                     Toast.LENGTH_SHORT).show();
@@ -235,14 +233,13 @@ public class ManageTaskActivity extends AppCompatActivity {
                             loadAllTasks();
                         }
                         else if (response.code() == 401) {
-                            // Unauthorized error - invalid token, ask user to relogin
+                            //Unauthorized error - invalid token, ask user to relogin
                             Toast.makeText(ManageTaskActivity.this,
                                     "Invalid session. Please login again",
                                     Toast.LENGTH_LONG).show();
-                            // You might want to add clearSessionAndRedirect() here
                         }
                         else {
-                            // Server return other error
+                            //Server return other error
                             Toast.makeText(ManageTaskActivity.this,
                                     "Error: " + response.message(),
                                     Toast.LENGTH_LONG).show();
@@ -256,7 +253,7 @@ public class ManageTaskActivity extends AppCompatActivity {
                                 "Error [" + t.getMessage() + "]",
                                 Toast.LENGTH_LONG).show();
 
-                        // For debug purpose
+                        //For debug purpose
                         Log.d("TaskUpdate", "Error: " + t.getMessage());
                     }
                 });

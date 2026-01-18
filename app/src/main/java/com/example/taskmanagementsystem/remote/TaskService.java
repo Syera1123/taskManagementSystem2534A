@@ -14,7 +14,6 @@ public interface TaskService {
     @GET("tasks")
     Call<List<TaskList>> getAllTask(@Header("api-key") String token);
 
-    // --- TAMBAH INI UNTUK SETTLEKAN ERROR ---
     @GET("tasks/{id}")
     Call<TaskList> getTask(@Header("api-key") String token, @Path("id") int id);
 
@@ -27,7 +26,7 @@ public interface TaskService {
             @Field("assigned_to") String assigned_to,
             @Field("created_task_by") String created_task_by,
             @Field("status") String status,
-            @Field("finish_date") String finish_date // Add this 7th parameter
+            @Field("finish_date") String finish_date
     );
 
     @FormUrlEncoded
@@ -39,9 +38,8 @@ public interface TaskService {
             @Field("description") String description,
             @Field("assigned_to") String assigned_to,
             @Field("created_task_by") String created_task_by,
-            @Field("finish_date") String finish_date // <--- ADD THIS LINE
+            @Field("finish_date") String finish_date
     );
-    // --- TAMBAH INI UNTUK UPDATE STATUS ---
     @FormUrlEncoded
     @POST("tasks/update-status/{id}")
     Call<TaskList> updateTaskStatus(

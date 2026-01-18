@@ -3,7 +3,7 @@ package com.example.taskmanagementsystem;
 import com.google.gson.annotations.SerializedName;
 
 public class Task {
-    private int id; // Needed for Update/Delete
+    private int id;
     private String title;
     private String description;
     @SerializedName("create_date")
@@ -12,7 +12,7 @@ public class Task {
     @SerializedName("assigned_to")
     private String assignedTo;
 
-    // Constructor used when creating a new task
+    //Constructor used when creating a new task
     public Task(String title, String description, String createDate, String status, String assignedTo) {
         this.title = title;
         this.description = description;
@@ -21,7 +21,7 @@ public class Task {
         this.assignedTo = assignedTo;
     }
 
-    // Getters and Setters
+    //Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getTitle() { return title; }
