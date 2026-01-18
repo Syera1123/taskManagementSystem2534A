@@ -81,7 +81,6 @@ public class EmployeeTaskActivity extends AppCompatActivity {
                     List<TaskList> allTasks = response.body();
                     List<TaskList> myFilteredTasks = new ArrayList<>();
 
-                    // Logic: Filter tasks where assigned_to matches current logged-in staff
                     for (TaskList task : allTasks) {
                         if (task.getAssigned_to() != null &&
                                 task.getAssigned_to().equalsIgnoreCase(currentUsername)) {
@@ -89,9 +88,9 @@ public class EmployeeTaskActivity extends AppCompatActivity {
                         }
                     }
 
-                    // FIX: Pass 3 arguments: Context, List, and Listener
+                    //Pass 3 arguments: Context, List, and Listener
                     adapter = new ListAdapter(EmployeeTaskActivity.this, myFilteredTasks, task -> {
-                        // When "UPDATE STATUS" is clicked
+                        //When "UPDATE STATUS" is clicked
                         Intent intent = new Intent(EmployeeTaskActivity.this, TaskDetailsActivity.class);
                         intent.putExtra("task_id", task.getId());
                         startActivity(intent);
@@ -126,7 +125,7 @@ public class EmployeeTaskActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // Optional: Long-press context menu logic
+    //Long-press context menu logic
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         MenuInflater inflater = getMenuInflater();
@@ -135,7 +134,7 @@ public class EmployeeTaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        // Handle long-press menu actions if needed
+        //Handle long-press menu actions if needed
         return super.onContextItemSelected(item);
     }
 }
